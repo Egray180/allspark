@@ -39,19 +39,12 @@ The PCB has two LEDs, one green and one red. The green LED is a power status LED
 
 ### Rework
 
-The TVS diode that I used casued issues when using battery power becasue it backfed voltage to the USB VBUS net through the USB differential pair, which toggled the boost converter enable. To fix it, I repopulated it with [this](https://www.ti.com/lit/ds/symlink/tpd2e2u06.pdf?HQS=dis-dk-null-digikeymode-dsf-pf-null-wwe&ts=1750318743440&ref_url=https%253A%252F%252Fwww.ti.com%252Fgeneral%252Fdocs%252Fsuppproductinfo.tsp%253FdistId%253D10%2526gotoUrl%253Dhttps%253A%252F%252Fwww.ti.com%252Flit%252Fgpn%252Ftpd2e2u06) component. Note that the project files do not reflect this update.
+The TVS diode that I used caused issues when using battery power because it backfed voltage to the USB VBUS net through the USB differential pair, which toggled the boost converter enable. To fix it, I repopulated it with [this](https://www.ti.com/lit/ds/symlink/tpd2e2u06.pdf?HQS=dis-dk-null-digikeymode-dsf-pf-null-wwe&ts=1750318743440&ref_url=https%253A%252F%252Fwww.ti.com%252Fgeneral%252Fdocs%252Fsuppproductinfo.tsp%253FdistId%253D10%2526gotoUrl%253Dhttps%253A%252F%252Fwww.ti.com%252Flit%252Fgpn%252Ftpd2e2u06) component. Note that the project files do not reflect this update.
 
 ### Manufacturing & Assembly
 
 I got the PCBs manufactured and assembled by JLCPCB (selected [options](images/JLCPCB_selections.jpg)). For assembly, I replaced some of the passive components from my Altium project with equivalent ones that JLCPCB carried. For other components that they did not carry, and for components that would make shipping less efficient (i.e. headers), I ordered separately and populated myself. The final JLCPCB BOM is [here](assembly/final_JLCPCB_bom.xls). These are the components that I populated myself:
-- [D2](https://www.digikey.com/en/products/detail/w%C3%BCrth-elektronik/150120GS75000/4489936)
-- [D3](https://www.digikey.com/en/products/detail/w%C3%BCrth-elektronik/150120SS75000/4489942)
-- [J2](https://www.digikey.com/en/products/detail/samtec-inc/TSW-102-07-L-S/1101425)
-- [L2](https://www.digikey.com/en/products/detail/w%C3%BCrth-elektronik/7447789002/1638578)
-- [P1](https://www.digikey.com/en/products/detail/samtec-inc/TSW-104-07-L-S/1101423)
-- [P2](https://www.digikey.com/en/products/detail/samtec-inc/TSW-103-07-L-S/1101424)
-- [SW1](https://www.digikey.com/en/products/detail/w%C3%BCrth-elektronik/430152070826/5208998)
-- [SW2](https://www.digikey.com/en/products/detail/c-k/JS102011SAQN/1640095)
+- [D2](https://www.digikey.com/en/products/detail/w%C3%BCrth-elektronik/150120GS75000/4489936), [D3](https://www.digikey.com/en/products/detail/w%C3%BCrth-elektronik/150120SS75000/4489942), [J2](https://www.digikey.com/en/products/detail/samtec-inc/TSW-102-07-L-S/1101425), [L2](https://www.digikey.com/en/products/detail/w%C3%BCrth-elektronik/7447789002/1638578), [P1](https://www.digikey.com/en/products/detail/samtec-inc/TSW-104-07-L-S/1101423), [P2](https://www.digikey.com/en/products/detail/samtec-inc/TSW-103-07-L-S/1101424), [SW1](https://www.digikey.com/en/products/detail/w%C3%BCrth-elektronik/430152070826/5208998), [SW2](https://www.digikey.com/en/products/detail/c-k/JS102011SAQN/1640095)
 
 I forgot to take out the x4 2512 package placeholder resistors (R16, R17, R18, R19), which were only there to reserve pads for the sensor leads. I desoldered them to solder the sensor leads when I was building the units. To align with the code, solder the sensors in [this](images/corner_letters.jpg) configuration, where the letters correspond to the channels in the schematic (see net labels on PCB). 
 
@@ -116,8 +109,24 @@ import tkinter as tk
 import websockets
 ```
 
+### Calibration
+
+I calibrated one of the sensors using a set of dumbbells, then applied the same calibration factor to all of them. Calibration involves setting the potentiometers (R12, R13, R14, R15) to be able to measure the desired range of forces, then figuring out the scale factor to apply. I tuned one of the potentiometers to give me the measurement range that I wanted, then I used a multimeter to set the rest. If the potentiometers are set too high, the operational amplifier will saturate at a lower force, preventing you from measuring any forces above that. For channel A, the equation is V<sub>A</sub> = (R<sub>12</sub>C + 1)V<sup>+</sup>, where C is the conductance of the sensor and V<sup>+</sup> is determined by the voltage divider with R<sub>20</sub> and R<sub>21</sub>. The conductance of the sensor is meant to be proportional to the input force. The firmware zeros each sensor on startup, but it may be wise to periodically zero to counteract the drift. Only calibrating one sensor instead of calibrating them each individually introduces extra error; however, for my application I was willing to trade this error for convenience. 
+
 ### Usage
 
 Flash each ESP32, making sure to update the WiFi credentials in the firmware. I used a mobile hotspot from my laptop because you need a 2.4 GHz network for the ESP32s to connect. Hosting a hotspot from your laptop also gets around client isolation that might be configured on the network. When you flash, select `ESP32C3 Dev Module` for the board, and make sure "USB CDC On Boot" is enabled for serial to work over USB. For each board you flash, update the esp_id variable in the firmware to give each one a unique ID so that the python can separate the data. Run the python script from your laptop and power on the AllSparks to get the data feed. In the laptop folder, the gui.py file is the primary python file, and the server.py file is for testing the WebSocket server. 
 
-# Capabilities
+# Improvements
+
+- Add an IMU so that each corner knows where it is. This enables more detailed calculations without the user having to set up in a predetermined way. AllSpark would be able to account for uneven force distribution, differentiate between x and y shear, x and y torques, etc.
+- Design an accessory part that makes setup easier and increases rigidity of AllSpark.
+
+# Final Product
+
+![](images/assy1.jpg)
+![](images/assy3.jpg)
+![](images/set1.jpg)
+![](images/set2.jpg)
+![](images/mounted1.jpg)
+![](images/mounted2.jpg)
