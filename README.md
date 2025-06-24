@@ -130,3 +130,7 @@ Flash each ESP32, making sure to update the WiFi credentials in the firmware. I 
 ![](images/set2.jpg)
 ![](images/mounted1.jpg)
 ![](images/mounted2.jpg)
+
+# Contact
+
+Created by [@EthanGray](https://github.com/Egray180) - feel free to contact me at egray180@student.ubc.ca
