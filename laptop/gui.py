@@ -14,13 +14,14 @@ def run_calculation():
     B = 0
     C = 0
     D = 0
+    scale = 0.075 # apply scale here for easier adjustment
     for i in range(1, 5):
         if latest_values.get(i) is None:
             continue
-        A += latest_values[i]["A"]
-        B += latest_values[i]["B"]
-        C += latest_values[i]["C"]
-        D += latest_values[i]["D"]
+        A += scale * latest_values[i]["A"]
+        B += scale * latest_values[i]["B"]
+        C += scale * latest_values[i]["C"]
+        D += scale * latest_values[i]["D"]
     # assuming even force distribution between corners
     calc_outputs[0] = D - C # normal force
     calc_outputs[1] = 2 * min(A, B) # shear force

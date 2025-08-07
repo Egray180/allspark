@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include <WebSocketsClient.h>
 
-const char* ssid = "DESKTOP-9SAQDQ1 7721";       // Your WiFi name
+const char* ssid = "esp32-host-computer";       // Your WiFi name
 const char* password = "t685M97="; // Your WiFi password
 
 const char* websocket_server_ip = "192.168.137.1"; // Laptop IP running the Python server
@@ -15,13 +15,13 @@ const int CH_B = 1;
 const int CH_C = 3;
 const int CH_D = 4;
 unsigned long lastSendTime = 0;
-const unsigned long sendInterval = 500;  // 10Hz
+const unsigned long sendInterval = 100;  // 10Hz
 int zeroA = 0;
 int zeroB = 0;
 int zeroC = 0;
 int zeroD = 0;
 int avg = 10; // Number of readings to average on startup to compute offset
-float scale = 0.015; 
+float scale = 1.0; // Changed to 1.0 -- scale on the host side instead
 
 // LED pin
 const int redLED = 10;
