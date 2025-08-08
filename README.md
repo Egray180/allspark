@@ -52,18 +52,13 @@ I forgot to take out the x4 2512 package placeholder resistors (R16, R17, R18, R
 
 <img src="images/cad_assy.png" width="400">
 
-The mechanical assembly consists of 4 parts:
-- Corner
-<img src="images/cad_corner.png" width="200">
+| Part | Image |
+|------|-------|
+| **Corner** | <img src="images/cad_corner.png" width="200"/> |
+| **Tray** | <img src="images/cad_tray.png" width="200"/> |
+| **Light Seal** | <img src="images/cad_light_seal.png" width="200"/> |
+| **Battery Cover** | <img src="images/cad_cover.png" width="200"/> |
 
-- Tray
-<img src="images/cad_tray.png" width="200">
-
-- Light Seal (part under ESP32 between battery springs)
-<img src="images/cad_light_seal.png" width="200">
-
-- Battery Cover
-<img src="images/cad_cover.png" width="200">
 
 I recommend printing the Corner at around 70% infill density, and the rest at 100%. The Light Seal is necessary so that the dead front LEDs look like nice points of light, and to prevent light leak through the battery area. The LEDs will shine through lighter filaments like white, but not through darker ones. The Battery Cover can snap onto the Tray, but it is an optional part because the batteries are retained by the battery springs. The assembly uses a total of x5 M2 screws, x2 for the PCB and x3 for screwing the Tray to the Corner. 
 
@@ -120,16 +115,25 @@ Flash each ESP32, making sure to update the WiFi credentials in the firmware. I 
 # Improvements
 
 - Add an IMU so that each corner knows where it is. This enables more detailed calculations without the user having to set up in a predetermined way. AllSpark would be able to account for uneven force distribution, differentiate between x and y shear, x and y torques, etc.
-- Design an accessory part that makes setup easier and increases rigidity of AllSpark.
+- ~~Design an accessory part that makes setup easier and increases rigidity of AllSpark.~~ - completed
 
 # Final Product
 
-![](images/assy1.jpg)
-![](images/assy3.jpg)
-![](images/set1.jpg)
-![](images/set2.jpg)
-![](images/mounted1.jpg)
-![](images/mounted2.jpg)
+<div align="left">
+  <img src="images/assy1.jpg" width="300">
+  <img src="images/assy3.jpg" width="300">
+  <img src="images/set1.jpg" width="300">
+</div>
+
+<div align="left">
+  <img src="images/mounted1.jpg" width="300">
+  <img src="images/mounted2.jpg" width="300">
+</div>
+
+<div align="left">
+  <img src="images/mounted_well1.jpg" width="300">
+  <img src="images/mounted_well2.jpg" width="300">
+</div>
 
 # Contact
 
